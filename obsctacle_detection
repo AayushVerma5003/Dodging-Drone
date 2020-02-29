@@ -1,0 +1,84 @@
+
+#include <LiquidCrystal.h> // includes the LiquidCrystal Library
+LiquidCrystal lcd(1, 2, 4, 5, 6, 7); // Creates an LCD object. Parameters: (rs, enable, d4, d5, d6, d7)
+const int trigPin1 = 8;
+const int trigPin2 = 9;
+const int trigPin3 = 10;
+const int trigPin4 = 12;
+
+const int echoPin1 = 2;
+const int echoPin2 = 3;
+const int echoPin3 = 4;
+const int echoPin4 = 5;
+
+//const int supply_pin=2;
+// const int gnd=5;
+const int blb=13;
+long duration1,duration2,duration3,duration4;
+double distance1, distance2, distance3, distance4;
+void setup() {
+lcd.begin(16,2); // Initializes the interface to the LCD screen, and specifies the dimensions (width and height) of the display
+Serial.begin(9600);
+pinMode(trigPin1, OUTPUT);
+pinMode(trigPin2, OUTPUT);
+pinMode(trigPin3, OUTPUT);
+pinMode(trigPin4, OUTPUT);
+
+
+pinMode(echoPin1, INPUT);
+pinMode(echoPin2, INPUT);
+pinMode(echoPin3, INPUT);
+pinMode(echoPin4, INPUT);
+//pinMode(supply_pin, OUTPUT);
+//pinMode(gnd, OUTPUT);
+pinMode(blb, OUTPUT);
+
+}
+void loop() {
+
+
+
+
+distance1=SonarSensor( trigPin1, echoPin1);
+
+distance2=SonarSensor( trigPin2, echoPin2);
+
+
+distance3=SonarSensor( trigPin3, echoPin3);
+
+
+distance4=SonarSensor( trigPin4, echoPin4);
+
+// Prints the distance on the Serial Monitor
+Serial.print("Distances : ");
+Serial.print(distance1);
+Serial.print(" ");
+Serial.print(distance2);
+Serial.print(" ");
+Serial.print(distance3);
+Serial.print(" ");
+Serial.println(distance4);
+if (distance1<= 30.00||distance2<= 30.00||distance3<= 30.00 || distance4<= 30.00 )
+{
+  digitalWrite(blb,HIGH);
+}
+else{digitalWrite(blb,LOW);}
+
+
+}
+double SonarSensor(int trigPin,int echoPin)
+{
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+long duration ;
+double distance;
+duration = pulseIn(echoPin, HIGH);
+distance = duration*0.017;
+//taking speed of sound as 340 m/s
+
+return distance;
+
+}
